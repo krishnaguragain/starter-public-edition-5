@@ -14,58 +14,6 @@
  * @link: https://codeigniter4.github.io/CodeIgniter4/
  */
 
-// CLI -------------------------------------------------------------------------
-
-if (!function_exists('escape_shell_arg')) {
-
-    /**
-     * Escapes command line shell arguments, this is an alternative
-     * to the built-in PHP function escapeshellarg($arg).
-     *
-     * @param string $arg   The input string.
-     * @return string
-     *
-     * @see https://www.php.net/manual/en/function.escapeshellarg.php
-     * @see http://stackoverflow.com/questions/6427732/how-can-i-escape-an-arbitrary-string-for-use-as-a-command-line-argument-in-windo
-     * @see http://markushedlund.com/dev-tech/php-escapeshellarg-with-unicodeutf-8-support
-     *
-     * @author Ivan Tcholakov <ivantcholakov@gmail.com>, 2016-2020.
-     * @license The MIT License (MIT)
-     * @link http://opensource.org/licenses/MIT
-     */
-    function escape_shell_arg($arg)
-    {
-        if (IS_WINDOWS_OS) {
-
-            // PHP engine is built for Windows.
-
-            // Sequence of backslashes followed by a double quote:
-            // double up all the backslashes and escape the double quote
-            $arg = preg_replace('/(\\*)"/', '$1$1\\"', $arg);
-
-            // Sequence of backslashes followed by the end of the arg,
-            // which will become a double quote later:
-            // double up all the backslashes
-            $arg = preg_replace('/(\\*)$/', '$1$1', $arg);
-
-            // All other backslashes do not need modifying
-
-            // Double-quote the whole thing
-            $arg = '"'.$arg.'"';
-
-            // Escape shell metacharacters.
-            $arg = preg_replace('/([\(\)%!^"<>&|;, ])/', '^$1', $arg);
-
-            return $arg;
-        }
-
-        // PHP engine is built for Linux or similar.
-
-        return "'" . str_replace("'", "'\\''", $arg) . "'";
-    }
-
-}
-
 // Renderers -------------------------------------------------------------------
 
 if (!function_exists('render_string')) {
@@ -168,6 +116,49 @@ if (!function_exists('render')) {
 
 }
 
+if (!function_exists('locate')) {
+
+    /**
+     * Returns the full path of a given view.
+     *
+     * @param string $view
+     *
+     * @return string
+     */
+    function locate($view)
+    {
+        $view = (string) $view;
+
+        $options = [];
+
+        $driverManager = new \Common\Modules\Renderers\Renderers();
+        $driverChain = $driverManager->getDriverChain('view', $options, $view);
+
+        if (empty($driverChain)) {
+            return null;
+        }
+
+        return $driverChain[0]['file'];
+    }
+
+}
+
+if (!function_exists('source')) {
+
+    /**
+     * Returns the source of a given view.
+     *
+     * @param string $view
+     *
+     * @return string
+     */
+    function source($view)
+    {
+        return file_get_contents(locate($view));
+    }
+
+}
+
 // Global Registry -------------------------------------------------------------
 
 if (!function_exists('registry')) {
@@ -225,3 +216,75 @@ if (!function_exists('registry_destroy')) {
 
 }
 
+// Files -----------------------------------------------------------------------
+
+if (!function_exists('extension')) {
+
+    function extension($path) {
+
+        $qpos = strpos($path, '?');
+
+        if ($qpos !== false) {
+
+            // Eliminate query string.
+            $path = substr($path, 0, $qpos);
+        }
+
+        return substr(strrchr($path, '.'), 1);
+    }
+
+}
+
+// CLI -------------------------------------------------------------------------
+
+if (!function_exists('escape_shell_arg')) {
+
+    /**
+     * Escapes command line shell arguments, this is an alternative
+     * to the built-in PHP function escapeshellarg($arg).
+     *
+     * @param string $arg   The input string.
+     * @return string
+     *
+     * @see https://www.php.net/manual/en/function.escapeshellarg.php
+     * @see http://stackoverflow.com/questions/6427732/how-can-i-escape-an-arbitrary-string-for-use-as-a-command-line-argument-in-windo
+     * @see http://markushedlund.com/dev-tech/php-escapeshellarg-with-unicodeutf-8-support
+     *
+     * @author Ivan Tcholakov <ivantcholakov@gmail.com>, 2016-2020.
+     * @license The MIT License (MIT)
+     * @link http://opensource.org/licenses/MIT
+     */
+    function escape_shell_arg($arg)
+    {
+        if (IS_WINDOWS_OS) {
+
+            // PHP engine is built for Windows.
+
+            // Sequence of backslashes followed by a double quote:
+            // double up all the backslashes and escape the double quote
+            $arg = preg_replace('/(\\*)"/', '$1$1\\"', $arg);
+
+            // Sequence of backslashes followed by the end of the arg,
+            // which will become a double quote later:
+            // double up all the backslashes
+            $arg = preg_replace('/(\\*)$/', '$1$1', $arg);
+
+            // All other backslashes do not need modifying
+
+            // Double-quote the whole thing
+            $arg = '"'.$arg.'"';
+
+            // Escape shell metacharacters.
+            $arg = preg_replace('/([\(\)%!^"<>&|;, ])/', '^$1', $arg);
+
+            return $arg;
+        }
+
+        // PHP engine is built for Linux or similar.
+
+        return "'" . str_replace("'", "'\\''", $arg) . "'";
+    }
+
+}
+
+// -----------------------------------------------------------------------------

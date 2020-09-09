@@ -9,6 +9,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" type="image/png" href="{{ base_url('favicon.ico')|e('html_attr') }}" />
     <link rel="apple-touch-icon-precomposed" href="{{ base_url('apple-touch-icon-precomposed.png')|e('html_attr') }}" />
+    <script type="text/javascript" src="{{ base_url('assets/lib/turbolinks/turbolinks.js')|e('html_attr') }}"></script>
+    <script type="text/javascript" src="{{ base_url('assets/composer-asset/components/modernizr/modernizr.js')|e('html_attr') }}"></script>
     <script type="text/javascript" src="{{ base_url('assets/composer-asset/components/webfontloader/webfontloader.js')|e('html_attr') }}"></script>
 
     <script type="text/javascript">
@@ -30,9 +32,9 @@ https://google-webfonts-helper.herokuapp.com
                     'icons', 'outline-icons', 'brand-icons'
                 ],
                 urls: [
-                    '{{ base_url('assets/open-sans/open-sans.min.css')|e('js') }}',
-                    '{{ base_url('assets/open-sans-condensed/open-sans-condensed.min.css')|e('js') }}',
-                    '{{ base_url('assets/fomantic-icons-default/icons.min.css')|e('js') }}'
+                    '{{ base_url('assets/lib/open-sans/open-sans.min.css')|e('js') }}',
+                    '{{ base_url('assets/lib/open-sans-condensed/open-sans-condensed.min.css')|e('js') }}',
+                    '{{ base_url('assets/lib/fomantic-icons-default/icons.min.css')|e('js') }}'
                 ]
             },
             timeout: 2000
@@ -45,39 +47,132 @@ https://google-webfonts-helper.herokuapp.com
     <link rel="stylesheet" href="{{ base_url('assets/composer-asset/components/highlightjs/styles/github.css')|e('html_attr') }}" />
     <script src="{{ base_url('assets/composer-asset/components/jquery/jquery.min.js')|e('html_attr') }}"></script>
 
+    <script src="{{ base_url('assets/composer-asset/fomantic/ui/dist/semantic.min.js')|e('html_attr') }}"></script>
+    <script src="{{ base_url('assets/lib/headroom/headroom.min.js')|e('html_attr') }}"></script>
+    <script src="{{ base_url('assets/lib/headroom/jQuery.headroom.min.js')|e('html_attr') }}"></script>
+
+    <script type="text/javascript">
+    //<![CDATA[
+
+    function hide_mobile_menu() {
+
+        $('html, body').animate({
+            scrollTop: 0
+        }, 100);
+
+        var menu = $('#main_navigation .ui.vertical.menu');
+
+        menu.transition({
+            animation: 'slide down',
+            onComplete : function() {
+
+                menu.css('display', 'none');
+                $('#main_navigation .menu.toggle i').addClass('content').removeClass('close');
+            }
+        });
+    }
+
+    function toggle_mobile_menu() {
+
+        var menu = $('#main_navigation .ui.vertical.menu');
+
+        if (menu.hasClass('hidden')) {
+            show_mobile_menu();
+        } else {
+            hide_mobile_menu();
+        }
+    }
+
+    function show_mobile_menu() {
+
+        $('html, body').animate({
+            scrollTop: 0
+        }, 100);
+
+        var menu = $('#main_navigation .ui.vertical.menu');
+
+        $('#main_navigation .extra').hide();
+
+        menu.transition({
+            animation: 'slide down',
+            onComplete : function() {
+
+                menu.css('display', 'block');
+                $('#main_navigation .menu.toggle i').addClass('close').removeClass('content');
+            }
+        });
+    }
+
+    //]]>
+    </script>
+
+    <script src="{{ base_url('assets/composer-asset/components/highlightjs/highlight.pack.min.js')|e('html_attr') }}"></script>
+    <script type="text/javascript">
+    //<![CDATA[
+
+    // highlight.js - Turbolinks compatibility.
+
+    hljs.called = false;
+    hljs.ArrayProto = [];
+
+    hljs.initHighlighting = function() {
+
+        if ((typeof Turbolinks === 'undefined') && hljs.initHighlighting.called) {
+            return;
+        }
+
+        hljs.initHighlighting.called = true;
+
+        var blocks = document.querySelectorAll('pre code');
+        hljs.ArrayProto.forEach.call(blocks, hljs.highlightBlock);
+    }
+
+    hljs.initHighlightingOnLoad = function() {
+
+        addEventListener("turbolinks:load", hljs.initHighlighting, false);
+        addEventListener("turbolinks:render", hljs.initHighlighting, false);
+        addEventListener('DOMContentLoaded', hljs.initHighlighting, false);
+        addEventListener('load', hljs.initHighlighting, false);
+    }
+
+    hljs.initHighlightingOnLoad();
+
+    //]]>
+    </script>
+
+    <script src="{{ base_url('assets/composer-asset/desandro/imagesloaded/imagesloaded.pkgd.min.js')|e('html_attr') }}"></script>
+    <script src="{{ base_url('assets/composer-asset/desandro/masonry/dist/masonry.pkgd.min.js')|e('html_attr') }}"></script>
+
+    <script type="text/javascript">
+    //<![CDATA[
+
+    document.addEventListener('turbolinks:load', function () {
+
+        var container = $('.masonry-container');
+
+        container.imagesLoaded( function () {
+
+            container.masonry({
+                columnWidth: '.masonry-item',
+                itemSelector: '.masonry-item',
+                percentPosition: true
+            });
+        });
+
+    });
+
+    //]]>
+    </script>
+
+    {% block top %}
+    {% endblock %}
+
 </head>
 
 <body>
 
-    <nav id="main_navigation">
-
-        <div class="main_navigation_wrapper headroom--pinned">
-
-            <div class="ui grid">
-
-                <div class="mobile hidden row">
-
-                    <div class="column">
-
-                        <div id="main_navigation_expanded" class="ui inverted blue borderless attached menu page grid">
-
-                            <a href="{{ site_url() }}" class="brand item"><strong>v. {{ constant('PLATFORM_VERSION') }}</strong></a>
-
-                            <div class="right menu">
-                                <div class="item">{{ constant('ENVIRONMENT')|upper|e('html') }}</div>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </nav>
+    {{ registry('controller').mainMenu.render()|raw }}
+    {{ registry('controller').header.render()|raw }}
 
     <div id="main_content">
 
@@ -128,15 +223,10 @@ https://google-webfonts-helper.herokuapp.com
 
     </footer>
 
-    <script src="{{ base_url('assets/composer-asset/fomantic/ui/dist/semantic.min.js')|e('html_attr') }}"></script>
-    <script src="{{ base_url('assets/headroom/headroom.min.js')|e('html_attr') }}"></script>
-    <script src="{{ base_url('assets/headroom/jQuery.headroom.min.js')|e('html_attr') }}"></script>
-    <script src="{{ base_url('assets/composer-asset/components/highlightjs/highlight.pack.min.js')|e('html_attr') }}"></script>
-
     <script type="text/javascript">
     //<![CDATA[
 
-    (function($) {
+    $(function() {
 
         // See http://appglobe.com/scroll-to-top-animation/
 
@@ -198,23 +288,51 @@ https://google-webfonts-helper.herokuapp.com
             }, 300); 
         }
 
-    })(jQuery);
-
-    $('.main_navigation_wrapper').visibility({
-        type: 'fixed'
     });
 
-    $('.main_navigation_wrapper:not(:first-of-type) [id]').removeAttr('id');
+    $(function() {
 
-    $('.main_navigation_wrapper:first-of-type').headroom({
-        offset : 50,
-        tolerance : 5
+        $('.ui.dropdown:not(.native):not(.special)[multiple]').dropdown();
+        $('.ui.dropdown:not(.native):not(.special):not([multiple])').dropdown();
+
+        $('body').on('click', '.message .close', function() {
+
+            $(this)
+              .closest('.message')
+              .transition('fade')
+            ;
+        });
+
+        $('.ui.accordion')
+          .accordion()
+        ;
+
+        $('.popover').popup({ 'on': Modernizr.touch ? 'click' : 'hover' });
+
+        $('.main_navigation_wrapper').visibility({
+            type: 'fixed'
+        });
+
+        $('.main_navigation_wrapper:not(:first-of-type) [id]').removeAttr('id');
+
+        $('.main_navigation_wrapper:first-of-type').headroom({
+            offset : 50,
+            tolerance : 5
+        });
+
+        $('#main_navigation .menu.toggle').on('click', function(e) {
+
+            e.preventDefault();
+            toggle_mobile_menu();
+        });
+
     });
-
-    hljs.initHighlightingOnLoad();
 
     //]]>
     </script>
+
+    {% block bottom %}
+    {% endblock %}
 
 </body>
 </html>

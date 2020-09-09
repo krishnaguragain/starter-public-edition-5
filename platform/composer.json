@@ -36,6 +36,7 @@
         "symfony/filesystem": "^5.1",
         "symfony/finder": "^5.1",
         "oomphinc/composer-installers-extender": "^1.1",
+        "fg/multiplayer": "^1.2.1",
         "erusev/parsedown": "^1.7",
         "erusev/parsedown-extra": "^0.8.1",
         "pixel418/markdownify": "^2.3",
@@ -51,6 +52,10 @@
         "components/jquery": "3.5.1",
         "components/highlightjs": "^9.16",
         "components/webfontloader": "^1.6",
-        "scrivo/highlight.php": "v9.18.1.1"
+        "scrivo/highlight.php": "v9.18.1.1",
+        "desandro/imagesloaded": "4.1.4",
+        "desandro/masonry": "4.2.2",
+        "components/modernizr": "^3.5",
+        "whichbrowser/parser": "^2.0"
     }
 }

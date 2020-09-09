@@ -1,8 +1,14 @@
 {% extends 'default_layout.html.twig' %}
 {% block content %}
 
-    <h1>README</h1>
+    <h1 class="ui header">Application Starter 5 Public Edition</h1>
 
-    {{ readme|raw }}
+    <p>
+        Project repository: <a href="https://github.com/ivantcholakov/starter-public-edition-5/" target="_blank" rel="noopener">https://github.com/ivantcholakov/starter-public-edition-5/</a>
+    </p>
+
+    <h2>Self-Diagnostics</h2>
+
+    <p>{{ diagnostics|raw }}</p>
 
 {% endblock %}

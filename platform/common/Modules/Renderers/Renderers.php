@@ -354,6 +354,18 @@ class Renderers
 
         foreach ($extensions as $extension) {
 
+            $e = '.'.$extension;
+
+            if (strlen($fileName) > strlen($e) && substr_compare($fileName, $e, -strlen($e)) === 0) {
+
+                $fileName = substr($fileName, 0, -strlen($e));
+                $extensions = [$extension];
+                break;
+            }
+        }
+
+        foreach ($extensions as $extension) {
+
             $view = $fileName.'.'.$extension;
 
             $file = $viewPath . $view;
@@ -447,7 +459,8 @@ class Renderers
             if (empty($list)) {
 
                 $list[] = $this->findView(
-                    pathinfo($view, PATHINFO_FILENAME),
+                    //pathinfo($view, PATHINFO_FILENAME),
+                    $view,
                     array_merge(['php'], $this->getFileExtensions(null, true)),
                     $viewPath,
                     $loader
@@ -461,7 +474,8 @@ class Renderers
 
                     $list = array_merge(
                         [$this->findView(
-                            pathinfo($view, PATHINFO_FILENAME),
+                            //pathinfo($view, PATHINFO_FILENAME),
+                            $view,
                             array_merge([$provided_extension != '' ? $provided_extension : 'php'], $this->getFileExtensions(null, true)),
                             $viewPath,
                             $loader
@@ -485,7 +499,8 @@ class Renderers
                     $_options = $list[0]['options'];
 
                     $list[0] = $this->findView(
-                        pathinfo($view, PATHINFO_FILENAME),
+                        //pathinfo($view, PATHINFO_FILENAME),
+                        $view,
                         $detectedDriverName != '' && $detectedExtension != ''
                             ? [$detectedExtension]
                             : $this->getFileExtensions($list[0]['name']),

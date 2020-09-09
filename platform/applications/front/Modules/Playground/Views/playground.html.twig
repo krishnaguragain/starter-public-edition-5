@@ -1,0 +1,87 @@
+{% extends 'default_layout.html.twig' %}
+
+{% block content %}
+
+            <div class="ui grid">
+
+                <div class="sixteen wide mobile ten wide tablet eleven wide computer column">
+
+                    <div class="ui two column stackable grid masonry-container">
+
+                        <div class="column masonry-item">
+
+                            <h3>Renderers</h3>
+
+                            <div class="ui vertical fluid menu">
+
+                                <a href="{{ site_url('playground/mustache')|e('html_attr') }}" class="item">Mustache Renderer Test</a>
+                                <a href="{{ site_url('playground/handlebars')|e('html_attr') }}" class="item">Handlebars Renderer Test</a>
+
+                            </div>
+
+                        </div>
+
+                        <div class="column masonry-item">
+
+                            <h3>Parsers</h3>
+
+                            <div class="ui vertical fluid menu">
+
+                                <a href="{{ site_url('playground/markdown')|e('html_attr') }}" class="item">Markdown Parser Test</a>
+                                <a href="{{ site_url('playground/markdownify')|e('html_attr') }}" class="item">Markdownify Parser Test</a>
+                                <a href="{{ site_url('playground/textile')|e('html_attr') }}" class="item">Textile Parser Test</a>
+
+                            </div>
+
+                        </div>
+
+                        <div class="column masonry-item">
+
+                            <h3>Helpers</h3>
+
+                            <div class="ui vertical fluid menu">
+
+                                <a href="{{ site_url('playground/file-type-icons')|e('html_attr') }}" class="item">Testing File Type Icons</a>
+
+                            </div>
+
+                        </div>
+
+                        <div class="column masonry-item">
+
+                            <h3>Libraries</h3>
+
+                            <div class="ui vertical fluid menu">
+
+                                <a href="{{ site_url('playground/multiplayer')|e('html_attr') }}" class="item">Multiplayer Library Test</a>
+                                <a href="{{ site_url('playground/which-browser')|e('html_attr') }}" class="item">WhichBrowser Test</a>
+
+                            </div>
+
+                        </div>
+
+                        <div class="column masonry-item">
+
+                            <h3>Front-End</h3>
+
+                            <div class="ui vertical fluid menu">
+
+                                <a href="{{ site_url('playground/masonry')|e('html_attr') }}" class="item">Masonry Test</a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="sixteen wide mobile six wide tablet five wide computer column">
+
+                      <img src="{{ base_url('assets/playground/playground.jpg') }}" class="ui fluid image" />
+
+                </div>
+
+            </div>
+
+{% endblock %}

@@ -69,6 +69,7 @@ class Twig extends BaseConfig
 
         $this->config['helpers'] = [
             'text',
+            'file_type_icons',
         ];
 
         // Functions ---------------------------------------------------------
@@ -77,11 +78,19 @@ class Twig extends BaseConfig
             // Static Class Methods and Properties
             ['call_static', ['\Common\Modules\Renderers\TwigExtension\StaticExtension', 'call_static']],
             ['get_static', ['\Common\Modules\Renderers\TwigExtension\StaticExtension', 'get_static']],
-            // Platform Routines
-            'registry',
             // URL/URI Handling
             'base_url',
             'site_url',
+            'http_build_url',
+            'http_build_query',
+            // Platform Routines
+            'registry',
+            'render',
+            'render_string',
+            'locate',
+            'source',
+            ['file_type_icon', 'file_type_icon', ['is_safe' => ['html', 'html_attr', 'js']]],
+            ['file_type_icon_fa', 'file_type_icon_fa', ['is_safe' => ['html', 'html_attr', 'js']]],
         ];
 
         // Filters -----------------------------------------------------------
@@ -117,6 +126,7 @@ class Twig extends BaseConfig
             'chr',
             // CodeIgniter's Helpers
             'ellipsize',
+            ['stringify_attributes', 'stringify_attributes', ['is_safe' => ['html', 'html_attr', 'js']]],
         ];
 
         // Tests (is * operators) --------------------------------------------
